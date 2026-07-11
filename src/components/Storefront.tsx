@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import type { Category, Product } from "@/data/types";
 import { categories } from "@/data/products";
 import { ProductCard } from "./ProductCard";
@@ -27,7 +28,14 @@ const SORT_OPTIONS: { key: Sort; label: string }[] = [
 
 /** Storefront consumes the store's own catalog API — like any headless shop. */
 export function Storefront() {
-  const [q, setQ] = useState("");
+  const searchParams = useSearchParams();
+  const urlQ = searchParams.get("q") ?? "";
+  const [q, setQ] = useState(urlQ);
+
+  // header search navigates to /?q=… — follow it
+  useEffect(() => {
+    setQ(urlQ);
+  }, [urlQ]);
   const [category, setCategory] = useState<Filter>("");
   const [sort, setSort] = useState<Sort>("newest");
   const [items, setItems] = useState<Product[]>([]);

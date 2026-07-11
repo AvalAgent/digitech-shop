@@ -1,10 +1,20 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart";
 
 export function Header() {
   const { count, open } = useCart();
+  const router = useRouter();
+  const [q, setQ] = useState("");
+
+  function submit(e: React.FormEvent) {
+    e.preventDefault();
+    const term = q.trim();
+    router.push(term ? `/?q=${encodeURIComponent(term)}#products` : "/#products");
+  }
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/70 bg-surface/80 backdrop-blur-md">
@@ -16,16 +26,22 @@ export function Header() {
           <span className="text-lg font-extrabold text-ink">دیجی‌تک</span>
         </Link>
 
-        <div className="mx-auto hidden w-full max-w-md items-center gap-2 rounded-full border border-border bg-bg px-4 py-2 text-muted sm:flex">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4 shrink-0">
-            <circle cx="11" cy="11" r="7" /><path d="M21 21l-4-4" strokeLinecap="round" />
-          </svg>
+        <form
+          onSubmit={submit}
+          className="mx-auto hidden w-full max-w-md items-center gap-2 rounded-full border border-border bg-bg px-4 py-2 text-muted focus-within:border-ink/30 sm:flex"
+        >
+          <button type="submit" aria-label="جستجو" className="shrink-0 text-muted transition hover:text-ink">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4">
+              <circle cx="11" cy="11" r="7" /><path d="M21 21l-4-4" strokeLinecap="round" />
+            </svg>
+          </button>
           <input
-            readOnly
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
             placeholder="جستجو در کالای دیجیتال…"
-            className="w-full bg-transparent text-sm outline-none placeholder:text-muted"
+            className="w-full bg-transparent text-sm text-ink outline-none placeholder:text-muted"
           />
-        </div>
+        </form>
 
         <button
           type="button"
