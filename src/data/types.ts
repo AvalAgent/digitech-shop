@@ -14,6 +14,7 @@ export interface Product {
   category: Category;
   priceIRR: number;
   rating: number;
+  stock: number;
   specs: Record<string, string>;
   description: string;
   images: string[];

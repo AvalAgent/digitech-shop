@@ -8,6 +8,8 @@ import { ProductMedia } from "@/components/ProductMedia";
 import { ProductCard } from "@/components/ProductCard";
 import { Rating } from "@/components/Rating";
 import { Price } from "@/components/Price";
+import { JsonLd } from "@/components/JsonLd";
+import { productJsonLd } from "@/lib/site";
 
 export function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }));
@@ -36,6 +38,7 @@ export default async function ProductPage({
 
   return (
     <>
+      <JsonLd data={productJsonLd(product)} />
       <Header />
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         <nav className="mb-6 text-sm text-muted">
