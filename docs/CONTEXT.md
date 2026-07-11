@@ -2,6 +2,25 @@
 
 > Simulated "customer" store for the AvalAgent sales-agent demo. Newest entries first.
 
+## 2026-07-12 — Sales-agent v1 live on avalagent STAGING; widget wiring is next
+
+avalagent side shipped (PR milad1367/avalagent#276 → `dev` → staging): products
+table + catalog sync + retrieval into the AI prompt + dashboard «ایجنت فروش» card.
+
+- **Staging demo business:** «دیجی‌تک» — id `fe9bd934-f6d9-46fe-a63d-e834726609d7`,
+  owner phone `09555555555` (staging OTP bypass: any phone + code `424242`).
+  64 products synced FROM this store's `/api/products` via the dashboard card.
+  Verified in chat: «گوشی زیر ۲۰ میلیون برای عکاسی» → real recommendations with
+  prices + links back to this store.
+- **This store's own state:** unchanged since 2026-07-11 (below); `WidgetLoader`
+  still env-gated OFF. To light it up: set on Vercel
+  `NEXT_PUBLIC_WIDGET_SRC=https://staging.avalagent.com/widget.js` and
+  `NEXT_PUBLIC_WIDGET_BUSINESS_ID=fe9bd934-f6d9-46fe-a63d-e834726609d7`, redeploy.
+  ⚠️ The avalagent web webhook enforces an Origin check — the business's
+  `allowed_domains` must include `preview-shop.avalagent.com` or chat rejects.
+- avalagent prod does NOT have the feature yet (awaits Milad's "live" =
+  dev→master); when it ships, re-point the env vars at a prod business.
+
 ## 2026-07-11 — Store built, deployed, catalog + API + cart live
 
 **What this is:** دیجی‌تک — a fake-but-realistic Persian electronics store, built as if it were a real AvalAgent customer. Phase 2 (NOT done): seed a demo business in avalagent, load this catalog as its KB, point the widget at it → sales agent demo.
