@@ -70,7 +70,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
       return [...prev, { ...item, qty: 1 }];
     });
-    setIsOpen(true);
   }, []);
 
   const setQty = useCallback((variantId: string, qty: number) => {

@@ -39,7 +39,10 @@ export function Header() {
             <path d="M6 6L5 3H3" strokeLinecap="round" />
           </svg>
           {count > 0 && (
-            <span className="absolute -top-1 -left-1 grid h-4 min-w-4 place-items-center rounded-full bg-accent px-1 text-[10px] font-bold text-surface">
+            <span
+              key={count}
+              className="animate-badge-pop absolute -top-1 -left-1 grid h-4 min-w-4 place-items-center rounded-full bg-accent px-1 text-[10px] font-bold text-surface"
+            >
               {new Intl.NumberFormat("fa-IR").format(count)}
             </span>
           )}

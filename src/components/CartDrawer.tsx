@@ -10,20 +10,30 @@ export function CartDrawer() {
   const { items, totalIRR, isOpen, close, setQty, remove, clear } = useCart();
   const [ordered, setOrdered] = useState(false);
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50" role="dialog" aria-label="سبد خرید">
-      {/* backdrop */}
+    <div
+      className={`fixed inset-0 z-50 ${isOpen ? "" : "pointer-events-none"}`}
+      role="dialog"
+      aria-label="سبد خرید"
+      aria-hidden={!isOpen}
+    >
+      {/* backdrop — fades */}
       <button
         type="button"
         aria-label="بستن"
+        tabIndex={isOpen ? 0 : -1}
         onClick={() => { close(); setOrdered(false); }}
-        className="absolute inset-0 bg-ink/40 backdrop-blur-[2px]"
+        className={`absolute inset-0 bg-ink/40 backdrop-blur-[2px] transition-opacity duration-300 motion-reduce:transition-none ${
+          isOpen ? "opacity-100" : "opacity-0"
+        }`}
       />
 
-      {/* panel — slides from the left in RTL */}
-      <div className="absolute left-0 top-0 flex h-full w-full max-w-md flex-col bg-surface shadow-2xl">
+      {/* panel — slides in from the left edge (RTL) */}
+      <div
+        className={`absolute left-0 top-0 flex h-full w-full max-w-md flex-col bg-surface shadow-2xl transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0.24,1)] motion-reduce:transition-none ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
         <div className="flex items-center justify-between border-b border-border px-5 py-4">
           <h2 className="text-base font-extrabold text-ink">سبد خرید</h2>
           <button
