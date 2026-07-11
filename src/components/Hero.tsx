@@ -1,50 +1,66 @@
-import { ProductMedia } from "./ProductMedia";
+import Link from "next/link";
+import { DeviceIcon } from "./DeviceIcon";
+
+const specs = ["A17 Pro", "48MP", "USB-C"];
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden">
-      <div className="mx-auto grid max-w-6xl items-center gap-8 px-4 pb-4 pt-10 sm:px-6 sm:pt-14 md:grid-cols-2">
-        {/* copy */}
-        <div className="relative z-10 text-center md:text-right">
-          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1 text-xs font-medium text-muted">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-            ارسال رایگان سفارش‌های بالای ۵ میلیون تومان
-          </span>
-
-          <h1 className="mt-5 text-4xl font-black leading-[1.15] text-ink sm:text-5xl">
-            همه‌ی دنیای دیجیتال،
+    <section className="hero-shell relative overflow-hidden pb-12 pt-8 sm:pb-20 sm:pt-14">
+      <div className="hero-grid pointer-events-none absolute inset-0 opacity-40" />
+      <div className="hero-orbit hero-orbit-one" />
+      <div className="hero-orbit hero-orbit-two" />
+      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:min-h-[640px] lg:grid-cols-[1.05fr_.95fr] lg:gap-8">
+        <div className="hero-copy relative z-10 pt-4 text-center lg:text-right">
+          <div className="hero-kicker mx-auto lg:mx-0">
+            <span className="hero-kicker-pulse" />
+            انتخاب تازه این هفته
+            <span className="font-mono text-[10px] tracking-[0.16em] text-lime/70">/ 01</span>
+          </div>
+          <h1 className="mt-7 text-[clamp(3rem,7vw,6.8rem)] font-black leading-[.94] tracking-[-0.07em] text-paper">
+            تکنولوژی،
             <br />
-            <span className="text-accent">یک‌جا.</span>
+            <span className="hero-outline">برای امروز.</span>
           </h1>
-
-          <p className="mx-auto mt-4 max-w-md text-base leading-7 text-muted md:mx-0">
-            جدیدترین موبایل، لپ‌تاپ و لوازم جانبی با تضمین اصالت. مطمئن نیستی کدام
-            برایت مناسب‌تر است؟
+          <p className="mx-auto mt-7 max-w-md text-base leading-8 text-paper/60 lg:mx-0">
+            از اولین کلیک تا آخرین درصد باتری، آن چیزی را پیدا کن که واقعاً با ریتم زندگی‌ات جور است.
           </p>
-
-          {/* nudge to the AI assistant — the signature */}
-          <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-start md:justify-start">
-            <a
-              href="#products"
-              className="rounded-full bg-ink px-6 py-3 text-sm font-bold text-surface transition hover:bg-ink/90"
-            >
-              مشاهده محصولات
-            </a>
-            <div className="inline-flex items-center gap-2 rounded-full border border-dashed border-accent/50 bg-accent-soft px-4 py-3 text-sm font-medium text-accent">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4">
-                <path d="M21 11.5a8.5 8.5 0 0 1-12.2 7.6L3 21l1.9-5.8A8.5 8.5 0 1 1 21 11.5z" strokeLinejoin="round" />
-              </svg>
-              نمی‌دونی کدوم؟ از دستیار بپرس
-              <span aria-hidden className="text-base">↙</span>
-            </div>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
+            <Link href="#products" className="hero-primary-action">
+              شروع خرید
+              <span aria-hidden>↙</span>
+            </Link>
+            <a href="#guide" className="hero-secondary-action">راهنمای انتخاب</a>
+          </div>
+          <div className="mt-12 flex justify-center gap-8 text-right lg:justify-start">
+            <div><b className="block text-xl text-paper">۲۴ ساعت</b><span className="text-xs text-paper/45">ارسال به تهران</span></div>
+            <div><b className="block text-xl text-paper">۷ روز</b><span className="text-xs text-paper/45">فرصت بازگشت</span></div>
+            <div><b className="block text-xl text-paper">۱۰۰٪</b><span className="text-xs text-paper/45">ضمانت اصالت</span></div>
           </div>
         </div>
 
-        {/* featured media */}
-        <div className="relative">
-          <div className="absolute inset-0 -z-10 translate-x-6 translate-y-6 rounded-[2.5rem] bg-accent-soft blur-2xl" />
-          <div className="aspect-[4/3] overflow-hidden rounded-[2.5rem] border border-border shadow-[0_30px_60px_-30px_rgba(12,18,34,0.4)]">
-            <ProductMedia category="mobile" brand="Apple" size="detail" />
+        <div className="hero-product-stage relative mx-auto w-full max-w-[520px]" aria-label="آیفون ۱۵ پرو مکس">
+          <div className="hero-index absolute right-0 top-2 text-left font-mono text-[10px] tracking-[.24em] text-paper/45">FEATURED / 2025</div>
+          <div className="hero-float-card hero-float-card-top">
+            <span className="text-[10px] text-paper/45">قدرت پردازش</span>
+            <b>A17 <em>PRO</em></b>
+          </div>
+          <div className="hero-float-card hero-float-card-bottom">
+            <span className="hero-sound-wave"><i /><i /><i /><i /></span>
+            <span className="text-xs text-paper/70">صدایی که نزدیک‌تر است</span>
+          </div>
+          <div className="hero-device-frame">
+            <span className="hero-device-glow" />
+            <div className="hero-device-notch" />
+            <DeviceIcon category="mobile" className="hero-device-icon" />
+            <div className="hero-device-screen">
+              <span className="hero-screen-time">9:41</span>
+              <span className="hero-screen-title">digital,<br />but human.</span>
+              <span className="hero-screen-dot" />
+            </div>
+          </div>
+          <div className="hero-product-caption">
+            <span>APPLE / IPHONE 15 PRO</span>
+            <div>{specs.map((spec) => <b key={spec}>{spec}</b>)}</div>
           </div>
         </div>
       </div>
