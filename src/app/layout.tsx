@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { vazirmatn } from "@/lib/fonts";
 import { WidgetLoader } from "@/components/WidgetLoader";
+import { CartProvider } from "@/lib/cart";
+import { CartDrawer } from "@/components/CartDrawer";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -17,7 +19,10 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl" className={vazirmatn.variable}>
       <body>
-        {children}
+        <CartProvider>
+          {children}
+          <CartDrawer />
+        </CartProvider>
         <WidgetLoader />
       </body>
     </html>

@@ -7,7 +7,7 @@ import { Footer } from "@/components/Footer";
 import { ProductMedia } from "@/components/ProductMedia";
 import { ProductCard } from "@/components/ProductCard";
 import { Rating } from "@/components/Rating";
-import { Price } from "@/components/Price";
+import { VariantPicker } from "@/components/VariantPicker";
 import { JsonLd } from "@/components/JsonLd";
 import { productJsonLd } from "@/lib/site";
 
@@ -77,14 +77,8 @@ export default async function ProductPage({
               ))}
             </dl>
 
-            <div className="mt-6 flex items-center justify-between gap-4 rounded-2xl border border-border bg-surface p-4">
-              <Price irr={product.priceIRR} size="lg" />
-              <button
-                type="button"
-                className="rounded-full bg-ink px-6 py-3 text-sm font-bold text-surface transition hover:bg-accent"
-              >
-                افزودن به سبد خرید
-              </button>
+            <div className="mt-6">
+              <VariantPicker product={product} />
             </div>
 
             <div className="mt-4 inline-flex items-center gap-2 self-start rounded-full bg-accent-soft px-4 py-2 text-sm font-medium text-accent">

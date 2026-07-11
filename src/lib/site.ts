@@ -30,8 +30,10 @@ export function productJsonLd(p: Product) {
       reviewCount: 20 + (p.stock % 80),
     },
     offers: {
-      "@type": "Offer",
-      price: p.priceIRR,
+      "@type": "AggregateOffer",
+      lowPrice: Math.min(...p.variants.map((v) => v.priceIRR)),
+      highPrice: Math.max(...p.variants.map((v) => v.priceIRR)),
+      offerCount: p.variants.length,
       priceCurrency: "IRR",
       availability:
         p.stock > 0

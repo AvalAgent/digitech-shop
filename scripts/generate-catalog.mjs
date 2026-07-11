@@ -150,44 +150,69 @@ function catOf(model) {
 }
 
 const out = [];
-let counter = 0;
+let modelIdx = 0;
 for (const model of models) {
+  modelIdx++;
   const category = catOf(model);
   const storages = model.storages ?? [{ gb: 0, fa: "", delta: 0 }];
   const cols = colors.slice(0, Math.max(1, model.colorCount));
+
+  // one PRODUCT per model; storage x color combos become its variants
+  const variants = [];
+  let v = 0;
   for (const st of storages) {
     for (const col of cols) {
-      counter++;
+      v++;
       const price = model.base + st.delta + between(-300000, 300000);
-      const nameParts = [model.name];
-      if (st.fa) nameParts.push(st.fa);
-      if (cols.length > 1) nameParts.push(col.fa);
-      const slugParts = [model.slug];
-      if (st.gb) slugParts.push(`${st.gb}gb`);
-      if (cols.length > 1) slugParts.push(col.slug);
-      const specs = { ...model.specs };
-      if (st.fa) specs["حافظه"] = st.fa;
-      if (cols.length > 1) specs["رنگ"] = col.fa;
-      // real product photo fetched per model (scripts/fetch-images.mjs); variants share it
-      const images = existsSync(join(IMG_DIR, `${model.slug}.jpg`))
-        ? [`/products/${model.slug}.jpg`]
-        : [];
-      out.push({
-        id: `p${String(counter).padStart(3, "0")}`,
-        slug: slugParts.join("-"),
-        name: nameParts.join(" "),
-        brand: model.brand,
-        category,
+      const skuParts = [model.slug];
+      if (st.gb) skuParts.push(`${st.gb}gb`);
+      if (cols.length > 1) skuParts.push(col.slug);
+      variants.push({
+        id: `${model.slug}-v${v}`,
+        sku: skuParts.join("-"),
+        ...(st.fa ? { storage: st.fa } : {}),
+        ...(cols.length > 1 ? { color: col.fa } : {}),
         priceIRR: Math.round(price / 100000) * 100000,
-        rating: Math.round((3.9 + rnd() * 1.0) * 10) / 10,
-        stock: between(0, 40),
-        specs,
-        description: descByCat[category](model.name, model.brand),
-        images,
+        stock: between(3, 25),
       });
     }
   }
+
+  // real product photo fetched per model (scripts/fetch-images.mjs); variants share it
+  const images = existsSync(join(IMG_DIR, `${model.slug}.jpg`))
+    ? [`/products/${model.slug}.jpg`]
+    : [];
+
+  out.push({
+    id: `p${String(modelIdx).padStart(3, "0")}`,
+    slug: model.slug,
+    name: model.name,
+    brand: model.brand,
+    category,
+    priceIRR: Math.min(...variants.map((x) => x.priceIRR)),
+    rating: Math.round((3.9 + rnd() * 1.0) * 10) / 10,
+    stock: variants.reduce((s, x) => s + x.stock, 0),
+    specs: { ...model.specs },
+    description: descByCat[category](model.name, model.brand),
+    images,
+    variants,
+  });
 }
+
+// interleave categories round-robin so the "all" listing shows a mix,
+// not 17 phones in a row
+const buckets = new Map();
+for (const p of out) {
+  if (!buckets.has(p.category)) buckets.set(p.category, []);
+  buckets.get(p.category).push(p);
+}
+const interleaved = [];
+const lists = [...buckets.values()];
+for (let i = 0; interleaved.length < out.length; i++) {
+  for (const list of lists) if (list[i]) interleaved.push(list[i]);
+}
+out.length = 0;
+out.push(...interleaved);
 
 const json = JSON.stringify(out, null, 2);
 writeFileSync(join(__dirname, "../src/data/catalog.json"), json + "\n");

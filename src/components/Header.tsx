@@ -1,6 +1,11 @@
+"use client";
+
 import Link from "next/link";
+import { useCart } from "@/lib/cart";
 
 export function Header() {
+  const { count, open } = useCart();
+
   return (
     <header className="sticky top-0 z-40 border-b border-border/70 bg-surface/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4 sm:px-6">
@@ -25,6 +30,7 @@ export function Header() {
         <button
           type="button"
           aria-label="سبد خرید"
+          onClick={open}
           className="relative mr-auto grid h-10 w-10 shrink-0 place-items-center rounded-full border border-border text-ink transition hover:bg-bg sm:mr-0"
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" className="h-5 w-5">
@@ -32,9 +38,11 @@ export function Header() {
             <circle cx="9" cy="20" r="1.4" /><circle cx="18" cy="20" r="1.4" />
             <path d="M6 6L5 3H3" strokeLinecap="round" />
           </svg>
-          <span className="absolute -top-1 -left-1 grid h-4 min-w-4 place-items-center rounded-full bg-accent px-1 text-[10px] font-bold text-surface">
-            ۳
-          </span>
+          {count > 0 && (
+            <span className="absolute -top-1 -left-1 grid h-4 min-w-4 place-items-center rounded-full bg-accent px-1 text-[10px] font-bold text-surface">
+              {new Intl.NumberFormat("fa-IR").format(count)}
+            </span>
+          )}
         </button>
       </div>
     </header>

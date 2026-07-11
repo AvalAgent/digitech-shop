@@ -24,8 +24,12 @@ export interface CatalogPage {
 
 /** Persian/Arabic-digit + case insensitive haystack match. */
 function matches(p: Product, q: string): boolean {
+  const variantTerms = p.variants
+    .flatMap((v) => [v.storage, v.color])
+    .filter(Boolean)
+    .join(" ");
   const hay =
-    `${p.name} ${p.brand} ${CATEGORY_LABEL.get(p.category) ?? ""} ${p.description} ${Object.values(p.specs).join(" ")}`.toLowerCase();
+    `${p.name} ${p.brand} ${CATEGORY_LABEL.get(p.category) ?? ""} ${p.description} ${Object.values(p.specs).join(" ")} ${variantTerms}`.toLowerCase();
   return q
     .toLowerCase()
     .split(/\s+/)
