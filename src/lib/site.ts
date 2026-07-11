@@ -2,7 +2,7 @@ import type { Product } from "@/data/types";
 
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
-  "https://demo-shop.avalagent.com";
+  "https://preview-shop.avalagent.com";
 
 export const STORE_NAME = "دیجی‌تک";
 
