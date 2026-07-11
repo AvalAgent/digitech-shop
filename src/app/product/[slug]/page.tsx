@@ -49,7 +49,13 @@ export default async function ProductPage({
 
         <div className="grid gap-8 md:grid-cols-2">
           <div className="aspect-square overflow-hidden rounded-[2rem] border border-border">
-            <ProductMedia category={product.category} brand={product.brand} size="detail" />
+            <ProductMedia
+              category={product.category}
+              brand={product.brand}
+              name={product.name}
+              image={product.images[0]}
+              size="detail"
+            />
           </div>
 
           <div className="flex flex-col">

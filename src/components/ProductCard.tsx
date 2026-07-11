@@ -11,7 +11,12 @@ export function ProductCard({ product }: { product: Product }) {
       className="group flex flex-col overflow-hidden rounded-3xl border border-border bg-surface transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_-16px_rgba(12,18,34,0.25)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
     >
       <div className="aspect-square">
-        <ProductMedia category={product.category} brand={product.brand} />
+        <ProductMedia
+          category={product.category}
+          brand={product.brand}
+          name={product.name}
+          image={product.images[0]}
+        />
       </div>
       <div className="flex flex-1 flex-col gap-2 p-4">
         <span className="text-[11px] font-medium text-muted">{product.brand}</span>

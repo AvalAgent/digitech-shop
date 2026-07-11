@@ -44,7 +44,13 @@ export function Hero() {
         <div className="relative">
           <div className="absolute inset-0 -z-10 translate-x-6 translate-y-6 rounded-[2.5rem] bg-accent-soft blur-2xl" />
           <div className="aspect-[4/3] overflow-hidden rounded-[2.5rem] border border-border shadow-[0_30px_60px_-30px_rgba(12,18,34,0.4)]">
-            <ProductMedia category="mobile" brand="Apple" size="detail" />
+            <ProductMedia
+              category="mobile"
+              brand="Apple"
+              name="آیفون ۱۵ پرو مکس"
+              image="/products/iphone-15-pro-max.jpg"
+              size="detail"
+            />
           </div>
         </div>
       </div>

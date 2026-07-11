@@ -1,11 +1,12 @@
 // Generates ~300 realistic Persian electronics products into src/data/catalog.json.
 // Deterministic (seeded RNG) so re-runs are reproducible. No DB — the API serves this.
 // Run: node scripts/generate-catalog.mjs
-import { writeFileSync } from "node:fs";
+import { writeFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const IMG_DIR = join(__dirname, "../public/products");
 
 // ── seeded RNG (mulberry32) ──────────────────────────────
 let seed = 0x9e3779b9;
@@ -167,6 +168,10 @@ for (const model of models) {
       const specs = { ...model.specs };
       if (st.fa) specs["حافظه"] = st.fa;
       if (cols.length > 1) specs["رنگ"] = col.fa;
+      // real product photo fetched per model (scripts/fetch-images.mjs); variants share it
+      const images = existsSync(join(IMG_DIR, `${model.slug}.jpg`))
+        ? [`/products/${model.slug}.jpg`]
+        : [];
       out.push({
         id: `p${String(counter).padStart(3, "0")}`,
         slug: slugParts.join("-"),
@@ -178,7 +183,7 @@ for (const model of models) {
         stock: between(0, 40),
         specs,
         description: descByCat[category](model.name, model.brand),
-        images: [],
+        images,
       });
     }
   }

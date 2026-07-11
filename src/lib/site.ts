@@ -21,7 +21,9 @@ export function productJsonLd(p: Product) {
     brand: { "@type": "Brand", name: p.brand },
     category: p.category,
     description: p.description,
-    image: p.images.length ? p.images : [`${SITE_URL}/product/${p.slug}`],
+    image: p.images.length
+      ? p.images.map((i) => (i.startsWith("http") ? i : `${SITE_URL}${i}`))
+      : [`${SITE_URL}/product/${p.slug}`],
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue: p.rating,
