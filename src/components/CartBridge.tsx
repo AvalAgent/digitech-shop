@@ -21,17 +21,25 @@ declare global {
   interface Window {
     avalagentCart?: {
       customerPhone: string | null;
+      /**
+       * This page's guest cart key. The agent writes with it, so an add lands
+       * in the SAME basket this page polls. Without it the agent used its own
+       * conversation id, the page kept polling its own key, and the item was
+       * wiped by the next refresh a few seconds later.
+       */
+      cartId: string | null;
       apply: (cart: ServerCart) => void;
     };
   }
 }
 
 export function CartBridge() {
-  const { phone, applyServerCart, open } = useCart();
+  const { phone, guestKey, applyServerCart, open } = useCart();
 
   useEffect(() => {
     window.avalagentCart = {
       customerPhone: phone,
+      cartId: guestKey || null,
       apply: (cart) => {
         applyServerCart(cart);
         // Open the drawer so the shopper sees what the agent picked.
@@ -41,7 +49,7 @@ export function CartBridge() {
     return () => {
       delete window.avalagentCart;
     };
-  }, [phone, applyServerCart, open]);
+  }, [phone, guestKey, applyServerCart, open]);
 
   return null;
 }
