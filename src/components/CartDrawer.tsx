@@ -7,7 +7,7 @@ import { useCart } from "@/lib/cart";
 import { formatToman } from "@/lib/format";
 
 export function CartDrawer() {
-  const { items, totalIRR, isOpen, close, setQty, remove, clear } = useCart();
+  const { items, totalIRR, isOpen, close, setQty, remove } = useCart();
   const [ordered, setOrdered] = useState(false);
 
   return (
@@ -125,7 +125,7 @@ export function CartDrawer() {
               </div>
               <button
                 type="button"
-                onClick={() => { setOrdered(true); clear(); }}
+                onClick={() => { setOrdered(true); items.forEach((i) => void remove(i.variantId)); }}
                 className="w-full rounded-full bg-ink py-3 text-sm font-bold text-surface transition hover:bg-accent"
               >
                 ثبت سفارش

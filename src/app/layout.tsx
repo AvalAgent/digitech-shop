@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { vazirmatn } from "@/lib/fonts";
 import { WidgetLoader } from "@/components/WidgetLoader";
+import { CartBridge } from "@/components/CartBridge";
 import { CartProvider } from "@/lib/cart";
 import { CartDrawer } from "@/components/CartDrawer";
 import "./globals.css";
@@ -22,8 +23,11 @@ export default function RootLayout({
         <CartProvider>
           {children}
           <CartDrawer />
+          {/* Both live inside the provider: the bridge publishes the cart to
+              window.avalagentCart, the loader injects the widget that reads it. */}
+          <CartBridge />
+          <WidgetLoader />
         </CartProvider>
-        <WidgetLoader />
       </body>
     </html>
   );

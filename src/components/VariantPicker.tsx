@@ -98,15 +98,7 @@ export function VariantPicker({ product }: { product: Product }) {
           type="button"
           disabled={out}
           onClick={() =>
-            add({
-              productId: product.id,
-              variantId: selected.id,
-              slug: product.slug,
-              name: product.name,
-              variantLabel: variantLabel(selected),
-              priceIRR: selected.priceIRR,
-              image: product.images[0],
-            })
+            void add(selected.id)
           }
           className="rounded-full bg-ink px-6 py-3 text-sm font-bold text-surface transition hover:bg-accent disabled:cursor-not-allowed disabled:opacity-40"
         >

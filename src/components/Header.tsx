@@ -1,14 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart";
+import { SignIn } from "@/components/SignIn";
 
 export function Header() {
-  const { count, open } = useCart();
+  const { count, open, remoteAddSeq } = useCart();
   const router = useRouter();
   const [q, setQ] = useState("");
+  // Celebrate only adds that came from the chat agent — an in-page add already
+  // has its own click feedback, and a doubled animation reads as a bug.
+  const [celebrate, setCelebrate] = useState(0);
+
+  useEffect(() => {
+    if (remoteAddSeq === 0) return;
+    setCelebrate(remoteAddSeq);
+    const timer = setTimeout(() => setCelebrate(0), 1200);
+    return () => clearTimeout(timer);
+  }, [remoteAddSeq]);
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -43,12 +54,27 @@ export function Header() {
           />
         </form>
 
+        <SignIn />
+
         <button
           type="button"
           aria-label="سبد خرید"
           onClick={open}
-          className="relative mr-auto grid h-10 w-10 shrink-0 place-items-center rounded-full border border-border text-ink transition hover:bg-bg sm:mr-0"
+          className={`relative mr-auto grid h-10 w-10 shrink-0 place-items-center rounded-full border border-border text-ink transition hover:bg-bg sm:mr-0${
+            celebrate ? " animate-cart-ring" : ""
+          }`}
         >
+          {celebrate > 0 && (
+            <span
+              // namespaced: the count badge below is also keyed by a number,
+              // and a bare `celebrate` collides with it whenever they match
+              key={`plus-${celebrate}`}
+              aria-hidden
+              className="animate-cart-plus-one pointer-events-none absolute -top-3 -left-2 text-xs font-black text-accent"
+            >
+              ۱+
+            </span>
+          )}
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" className="h-5 w-5">
             <path d="M6 6h15l-1.5 9h-12z" strokeLinejoin="round" />
             <circle cx="9" cy="20" r="1.4" /><circle cx="18" cy="20" r="1.4" />
@@ -56,7 +82,7 @@ export function Header() {
           </svg>
           {count > 0 && (
             <span
-              key={count}
+              key={`count-${count}`}
               className="animate-badge-pop absolute -top-1 -left-1 grid h-4 min-w-4 place-items-center rounded-full bg-accent px-1 text-[10px] font-bold text-surface"
             >
               {new Intl.NumberFormat("fa-IR").format(count)}

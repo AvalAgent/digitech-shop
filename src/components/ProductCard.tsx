@@ -18,15 +18,7 @@ export function ProductCard({ product }: { product: Product }) {
       product.variants.find((x) => x.priceIRR === product.priceIRR && x.stock > 0) ??
       product.variants.find((x) => x.stock > 0) ??
       product.variants[0];
-    add({
-      productId: product.id,
-      variantId: v.id,
-      slug: product.slug,
-      name: product.name,
-      variantLabel: variantLabel(v),
-      priceIRR: v.priceIRR,
-      image: product.images[0],
-    });
+    void add(v.id);
   }
 
   return (
