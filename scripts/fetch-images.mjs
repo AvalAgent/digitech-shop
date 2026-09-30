@@ -84,25 +84,64 @@ const MODELS = {
   "samsung-t9-ssd-2tb": { cat: null, q: "اس اس دی سامسونگ t9" },
   "ugreen-hub-6in1": { cat: null, q: "هاب یوگرین 6 پورت" },
   "baseus-charger-30w": { cat: null, q: "شارژر بیسوس 30 وات" },
+  // added 2026-09-30
+  "galaxy-a55": { cat: "mobile-phone", q: "galaxy a55", must: ["گوشی موبایل سامسونگ مدل Galaxy A55"] },
+  "galaxy-a15": { cat: "mobile-phone", q: "galaxy a15", must: ["گوشی موبایل سامسونگ مدل Galaxy A15"] },
+  "redmi-pad-se": { cat: "tablet", q: "redmi pad se" },
+  "galaxy-buds-fe": { cat: "headphone", q: "galaxy buds fe" },
+  "redmi-buds-5-pro": { cat: "headphone", q: "redmi buds 5 pro" },
+  "soundcore-life-q30": { cat: "headphone", q: "soundcore life q30" },
+  "jbl-tune-520bt": { cat: "headphone", q: "jbl tune 520bt" },
+  "galaxy-watch-fe": { cat: "smart-watch", q: "galaxy watch fe" },
+  "amazfit-gtr-4": { cat: "smart-watch", q: "amazfit gtr 4" },
+  "huawei-watch-gt-4": { cat: "smart-watch", q: "huawei watch gt 4" },
+  "jbl-flip-6": { cat: null, q: "اسپیکر جی بی ال flip 6" },
+  "jbl-charge-5": { cat: null, q: "اسپیکر جی بی ال charge 5" },
+  "jbl-go-3": { cat: null, q: "اسپیکر جی بی ال go 3" },
+  "iphone-15-silicone-case": { cat: null, q: "کاور سیلیکونی آیفون 15", must: ["سیلیکونی", "iPhone 15", "!Pro", "!pro", "!PRO"] },
+  "iphone-15-pro-silicone-case": { cat: null, q: "کاور سیلیکونی آیفون 15 پرو", must: ["سیلیکونی", "15 Pro", "!Max", "!MAX", "!max"] },
+  "galaxy-s24-camshield-case": { cat: null, q: "کاور نیلکین CamShield Pro Galaxy S24", must: ["CamShield Pro", "S24", "!Ultra", "!Plus", "!FE", "!fe"] },
+  "galaxy-s24-ultra-camshield-case": { cat: null, q: "کاور نیلکین camshield گلکسی s24 ultra" },
+  "iphone-15-glass": { cat: null, q: "محافظ صفحه نیلکین آیفون 15" },
+  "iphone-15-pro-glass": { cat: null, q: "محافظ صفحه نیلکین آیفون 15 پرو" },
+  "galaxy-s24-glass": { cat: null, q: "محافظ صفحه نیلکین گلکسی s24" },
+  "galaxy-s24-ultra-glass": { cat: null, q: "محافظ صفحه نیلکین گلکسی s24 ultra" },
+  "sandisk-microsd-128gb": { cat: null, q: "کارت حافظه microSDXC سن دیسک extreme 128", must: ["microSDXC", "Extreme", "190", "128", "!PRO"] },
+  "sandisk-microsd-256gb": { cat: null, q: "کارت حافظه سن دیسک extreme 256" },
+  "sandisk-ultra-flair-128gb": { cat: null, q: "فلش سن دیسک ultra flair 128" },
+  "samsung-charger-45w": { cat: null, q: "شارژر 45 وات سامسونگ" },
+  "apple-charger-20w": { cat: null, q: "آداپتور 20 وات اپل" },
+  "apple-magsafe-charger": { cat: null, q: "شارژر بی سیم مگ سیف اپل MagSafe", must: ["اپل", "MagSafe"] },
+  "xiaomi-power-bank-20000": { cat: null, q: "پاوربانک 22.5 وات شیائومی PB2020MI", must: ["22.5", "20000"] },
+  "ps5-dualsense": { cat: null, q: "دسته dualsense ps5" },
+  "logitech-g502-hero": { cat: "mouse", q: "logitech g502 hero" },
 };
 
-async function searchDk(cat, q) {
+// `must`: every token must appear in the product title; "!token" must not.
+// Guards against Digikala's top hit being a sibling model (Ultra vs base, SD vs microSD).
+function titleOk(title, must) {
+  if (!must) return true;
+  return must.every((t) => (t.startsWith("!") ? !title.includes(t.slice(1)) : title.includes(t)));
+}
+
+async function searchDk(cat, q, must) {
   const base = cat
     ? `https://api.digikala.com/v1/categories/${cat}/search/`
     : "https://api.digikala.com/v1/search/";
   const res = await fetch(`${base}?q=${encodeURIComponent(q)}`, { headers: UA });
   if (!res.ok) return null;
   const json = await res.json();
-  return json?.data?.products?.[0]?.images?.main?.url?.[0]?.split("?")[0] ?? null;
+  const hit = (json?.data?.products ?? []).find((p) => titleOk(p.title_fa ?? "", must));
+  return hit?.images?.main?.url?.[0]?.split("?")[0] ?? null;
 }
 
 let ok = 0, skipped = 0, failed = [];
-for (const [slug, { cat, q }] of Object.entries(MODELS)) {
+for (const [slug, { cat, q, must }] of Object.entries(MODELS)) {
   const file = join(OUT_DIR, `${slug}.jpg`);
   if (existsSync(file)) { skipped++; continue; }
   try {
-    let url = await searchDk(cat, q);
-    if (!url && cat) url = await searchDk(null, q); // fallback: generic search
+    let url = await searchDk(cat, q, must);
+    if (!url && cat) url = await searchDk(null, q, must); // fallback: generic search
     if (!url) { failed.push(slug); continue; }
     const img = await fetch(url, { headers: UA });
     if (!img.ok) { failed.push(slug); continue; }
