@@ -2,6 +2,24 @@
 
 > Simulated "customer" store for the AvalAgent sales-agent demo. Newest entries first.
 
+## 2026-09-30 — Realistic catalogue: 94 products / 401 variants
+
+- `scripts/generate-catalog.mjs` rewritten: per-model REAL colours, storage tiers,
+  6–8 specs and a hand-written Persian description (who it is for, what it does
+  best, one honest limitation). Still deterministic (seeded RNG, byte-identical re-runs).
+- 64 original products keep ids p001–p064 and slugs. 136 old variant ids+skus kept
+  where the storage/colour combo still exists (e.g. iPhone 15 Pro Max 128GB is gone —
+  real model starts at 256GB). Dropped variant ids simply fall out of old carts.
+- 30 new products p065–p094 in the existing six categories (speakers, cases, screen
+  protectors, microSD, chargers, DualSense, G502, Buds FE, Redmi Buds 5 Pro, Q30,
+  Tune 520BT, Watch FE, GTR 4, GT 4, Galaxy A55/A15, Redmi Pad SE).
+- Stock: 40 of 401 variants (10%) at 0; `airpods-max` and `galaxy-watch-6-classic`
+  fully sold out (`SOLD_OUT` in the generator). Min stock is no longer 3.
+- `priceIRR` still holds TOMAN (historical name, kept on purpose).
+- `scripts/fetch-images.mjs` gained a `must` title filter (Digikala's top hit is often
+  a sibling model). `galaxy-a55` / `galaxy-a15` have no photo: Digikala delisted both;
+  the UI's device-glyph fallback renders fine.
+
 ## 2026-07-12 — Sales-agent v1 live on avalagent STAGING; widget wiring is next
 
 avalagent side shipped (PR milad1367/avalagent#276 → `dev` → staging): products
